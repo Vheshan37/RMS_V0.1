@@ -1,2 +1,2 @@
-# RMS_V0.1
-Restaurant Menagement System (Java)
+# RestaurantPOS
+this is the university group project. that project deliver Restaurant point of sale System
