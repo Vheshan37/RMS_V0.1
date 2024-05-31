@@ -875,10 +875,13 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
-        int row = jTable1.getSelectedRow();
-        DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
-        billTable.removeRow(row);
-        jTable1.setModel(billTable);
+        if (evt.getKeyCode() == 127) {
+            int row = jTable1.getSelectedRow();
+            DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
+            billTable.removeRow(row);
+            jTable1.setModel(billTable);
+            loadTotalBillValue();
+        }
     }//GEN-LAST:event_jTable1KeyReleased
 
     public static void main(String args[]) {
