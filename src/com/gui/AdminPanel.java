@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,15 +21,10 @@ import javax.swing.Timer;
 public class AdminPanel extends javax.swing.JFrame {
 
     public AdminPanel() {
-        System.out.println("1");
         initComponents();
-        System.out.println("2");
         SetDefaultComponents();
-        System.out.println("3");
         addPanelToCenter(jButton1, new Dashboard());
-        System.out.println("4");
         setTimer();
-        System.out.println("5");
     }
 
     public void setTimer() {

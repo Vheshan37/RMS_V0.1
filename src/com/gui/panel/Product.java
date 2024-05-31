@@ -3154,7 +3154,6 @@ public class Product extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Please select a 'Payment Method'", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
             if (jTextField15.getText().isEmpty()) {
-                //                Without Invoice No
                 int invoiceConfirmation = JOptionPane.showConfirmDialog(this, "Do you want to proceed without 'Invoice No'", "Alert", JOptionPane.YES_NO_OPTION);
                 if (invoiceConfirmation == 0) {
 

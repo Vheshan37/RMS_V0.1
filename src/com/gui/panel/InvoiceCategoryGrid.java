@@ -1,13 +1,9 @@
 package com.gui.panel;
 
-import com.gui.TakeawayInvoice;
 import com.model.SQLConnector;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import javax.swing.JButton;
@@ -17,8 +13,13 @@ import javax.swing.SwingUtilities;
 
 public class InvoiceCategoryGrid extends javax.swing.JPanel {
 
-    public InvoiceCategoryGrid() {
+    private static JPanel loadPanel;
+
+    public InvoiceCategoryGrid(JPanel jPanel) {
         initComponents();
+
+        this.loadPanel = jPanel;
+
         String query1 = "SELECT COUNT(*) AS `num_rows` FROM `category` INNER JOIN `product_department` ON `product_department`.`id`=`category`.`product_department_id` WHERE `product_department`.`department`='KOT'";
         String query2 = "SELECT * FROM `category` INNER JOIN `product_department` ON `product_department`.`id`=`category`.`product_department_id` WHERE `product_department`.`department`='KOT' ORDER BY `category` ASC";
         setGridLayout(query1, query2, jPanel2);
@@ -63,10 +64,19 @@ public class InvoiceCategoryGrid extends javax.swing.JPanel {
                 jButton.setBackground(new Color(57, 175, 169));
                 jButton.setForeground(new Color(222, 242, 241));
 
+                String query = "SELECT COUNT(*) AS `products` FROM `product` WHERE `category_id`='" + categoryTable.getString("category.id") + "'";
+                ResultSet products = SQLConnector.search(query);
+                products.next();
+                int productCount = products.getInt("products");
+
                 jButton.addActionListener(e -> {
-                    TakeawayInvoice.jPanel3.removeAll();
-                    TakeawayInvoice.jPanel3.add(new InvoiceProductGrid(categoryName, categoryID), BorderLayout.CENTER);
-                    SwingUtilities.updateComponentTreeUI(TakeawayInvoice.jPanel3);
+                    if (productCount == 0) {
+                        JOptionPane.showMessageDialog(this, "There has no item from this category", "Alert", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        loadPanel.removeAll();
+                        loadPanel.add(new InvoiceProductGrid(categoryName, categoryID, loadPanel), BorderLayout.CENTER);
+                        SwingUtilities.updateComponentTreeUI(loadPanel);
+                    }
                 });
 
                 jPanel.add(jButton);

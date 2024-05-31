@@ -6,18 +6,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
-import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class InvoiceProductGrid extends javax.swing.JPanel {
 
-    /**
-     * Creates new form InvoiceCategoryGrid
-     */
-    public InvoiceProductGrid(String category, String id) {
+    private static JPanel loadPanel;
+
+    public InvoiceProductGrid(String category, String id, JPanel jPanel) {
         initComponents();
+
+        loadPanel = jPanel;
 
         jLabel2.setText(category);
 
@@ -37,15 +37,12 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
             e.printStackTrace();
         }
 
-        // Desired number of columns
         int numColumns;
 
         numColumns = 4;
 
-        // Calculate the integer number of rows for the grid layout (using ceil)
         int gridRows = (int) Math.ceil((double) numRows / numColumns);
 
-        // Create the JPanel with the calculated grid layout
         jPanel.setLayout(new GridLayout(gridRows, numColumns, 15, 15));
 
         try {
@@ -206,7 +203,7 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         TakeawayInvoice.jPanel3.removeAll();
-        TakeawayInvoice.jPanel3.add(new InvoiceCategoryGrid(), BorderLayout.CENTER);
+        TakeawayInvoice.jPanel3.add(new InvoiceCategoryGrid(loadPanel), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(TakeawayInvoice.jPanel3);
     }//GEN-LAST:event_jButton1ActionPerformed
 

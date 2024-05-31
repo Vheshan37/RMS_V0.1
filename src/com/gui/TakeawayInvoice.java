@@ -21,7 +21,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     public void setDefaultComponent() {
         jTextField2.grabFocus();
         jPanel3.removeAll();
-        jPanel3.add(new InvoiceCategoryGrid(), BorderLayout.CENTER);
+        jPanel3.add(new InvoiceCategoryGrid(this.jPanel3), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
 
     }
@@ -786,7 +786,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             takeAwayVector.add(takeAwayData);
         }
         jPanel3.removeAll();
-        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1), BorderLayout.CENTER);
+        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1,this.jPanel3), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
     }//GEN-LAST:event_jButton25ActionPerformed
 
