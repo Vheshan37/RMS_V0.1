@@ -22,8 +22,8 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
 
     Vector<TakeawayBillData> takeAwayVector;
     JTable jTable;
-    String locationID;
-    
+    String locationID = "5";
+
     public InvoicePaymentPanel(String billAmount, Vector takeAwayData, JTable jTable) {
         initComponents();
         takeAwayVector = takeAwayData;
@@ -539,30 +539,36 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(new Date());
         String query = "INSERT INTO takeaway_invoice (date_time,amount,paid_amount,payment_method_id)"
                 + "VALUES ('" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1))";
+        System.out.println(query);
         try {
             long insertID = SQLConnector.iud(query);
             System.out.println("Query: " + query);
-            for (TakeawayBillData item : takeAwayVector) {
+            for (int invoiceIteration = 0; invoiceIteration < jTable.getRowCount(); invoiceIteration++) {
                 query = "INSERT INTO takeaway_item (product_id,qty,takeaway_invoice_id)"
-                        + "VALUES ('" + item.getId() + "','" + item.getQty() + "','" + insertID + "')";
+                        + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + jTable.getValueAt(invoiceIteration, 2) + "','" + insertID + "')";
+                System.out.println(query);
                 SQLConnector.iud(query);
 
-                query = "SELECT * FROM `location_stock` INNER JOIN `product` ON `product`.`id`=`location_stock`.`product_id` WHERE `product_id`='" + item.getId() + "'";
+                query = "SELECT * FROM `location_stock` INNER JOIN `product` ON `product`.`id`=`location_stock`.`product_id` WHERE `product_id`='" + jTable.getValueAt(invoiceIteration, 0) + "'";
+                System.out.println(query);
                 ResultSet locationStockTable = SQLConnector.search(query);
                 if (locationStockTable.next()) {
                     double stockQty = locationStockTable.getDouble("qty");
                     double measure = locationStockTable.getDouble("measure");
-                    double updateQty = stockQty - (Integer.parseInt(item.getQty()) * measure);
-                    query = "UPDATE location_stock SET qty='" + updateQty + "' WHERE product_id='" + item.getId() + "' AND location_id='" + locationID + "'";
+                    double updateQty = stockQty - (Integer.parseInt(String.valueOf(jTable.getValueAt(invoiceIteration, 2))) * measure);
+                    query = "UPDATE location_stock SET qty='" + updateQty + "' WHERE product_id='" + jTable.getValueAt(invoiceIteration, 0) + "' AND location_id='" + locationID + "'";
+                    System.out.println(query);
                     SQLConnector.iud(query);
                 } else {
-                    query = "SELECT * FROM `product` WHERE `product_id`='" + item.getId() + "'";
+                    query = "SELECT * FROM `product` WHERE `product_id`='" + jTable.getValueAt(invoiceIteration, 0) + "'";
                     ResultSet productTable = SQLConnector.search(query);
                     productTable.next();
                     double measure = productTable.getDouble("measure");
-                    double updateQty = Integer.parseInt(item.getQty()) * measure;
+                    double updateQty = -(Integer.parseInt(String.valueOf(jTable.getValueAt(invoiceIteration, 2))) * measure);
                     query = "INSERT INTO location_stock (product_id,location_id,qty) "
-                            + "VALUES ('" + item.getId() + "','" + locationID + "','" + updateQty + "')";
+                            + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + locationID + "','" + updateQty + "')";
+                    System.out.println(query);
+                    SQLConnector.iud(query);
                 }
             }
             System.out.println("Billing Completed");
