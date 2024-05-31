@@ -537,14 +537,14 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         String billAmount = jTextField19.getText();
         String cashAmount = jTextField14.getText();
         String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(new Date());
-        String query = "INSERT INTO takeaway_invoice (date_time,amount,paid_amount,payment_method_id)"
+        String query = "INSERT INTO invoice (date_time,amount,paid_amount,payment_method_id)"
                 + "VALUES ('" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1))";
         System.out.println(query);
         try {
             long insertID = SQLConnector.iud(query);
             System.out.println("Query: " + query);
             for (int invoiceIteration = 0; invoiceIteration < jTable.getRowCount(); invoiceIteration++) {
-                query = "INSERT INTO takeaway_item (product_id,qty,takeaway_invoice_id)"
+                query = "INSERT INTO invoice_item (product_id,qty,takeaway_invoice_id)"
                         + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + jTable.getValueAt(invoiceIteration, 2) + "','" + insertID + "')";
                 System.out.println(query);
                 SQLConnector.iud(query);

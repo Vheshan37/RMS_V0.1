@@ -40,13 +40,7 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
         // Desired number of columns
         int numColumns;
 
-        if (numRows <= 8) {
-            numColumns = 4;
-            System.out.println("YES");
-        } else {
-            numColumns = 8;
-            System.out.println("NO");
-        }
+        numColumns = 4;
 
         // Calculate the integer number of rows for the grid layout (using ceil)
         int gridRows = (int) Math.ceil((double) numRows / numColumns);
