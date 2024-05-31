@@ -276,7 +276,7 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         jLabel17.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(23, 37, 42));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("Discount");
+        jLabel17.setText("Discount (%)");
 
         jTextField17.setBackground(new java.awt.Color(255, 255, 255));
         jTextField17.setForeground(new java.awt.Color(23, 37, 42));
@@ -346,7 +346,7 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         jLabel19.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(23, 37, 42));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel19.setText("Total Amount (%)");
+        jLabel19.setText("Total Amount");
 
         jTextField19.setBackground(new java.awt.Color(44, 85, 190));
         jTextField19.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
