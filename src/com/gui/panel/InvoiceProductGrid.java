@@ -22,7 +22,7 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
         jLabel2.setText(category);
 
         String query1 = "SELECT COUNT(*) AS num_rows FROM product WHERE category_id='" + id + "'";
-        String query2 = "SELECT * FROM product WHERE category_id='" + id + "' ORDER BY `name` ASC";
+        String query2 = "SELECT * FROM product WHERE category_id='" + id + "' ORDER BY `name` DESC";
         setGridLayout(query1, query2, jPanel2);
     }
 

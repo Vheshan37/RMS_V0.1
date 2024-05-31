@@ -537,15 +537,19 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         String billAmount = jTextField19.getText();
         String cashAmount = jTextField14.getText();
         String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(new Date());
-        String query = "INSERT INTO invoice (date_time,amount,paid_amount,payment_method_id)"
-                + "VALUES ('" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1))";
-        System.out.println(query);
         try {
-            long insertID = SQLConnector.iud(query);
+            String query = "SELECT * FROM `ctrl`";
+            ResultSet ctrlDataTable = SQLConnector.search(query);
+            ctrlDataTable.next();
+            String inv_no = ctrlDataTable.getString("inv_no");
+
+            query = "INSERT INTO invoice (inv_no,date_time,amount,paid_amount,payment_method_id)"
+                    + "VALUES ('" + inv_no + "'," + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1))";
+            System.out.println(query);
             System.out.println("Query: " + query);
             for (int invoiceIteration = 0; invoiceIteration < jTable.getRowCount(); invoiceIteration++) {
                 query = "INSERT INTO invoice_item (product_id,qty,takeaway_invoice_id)"
-                        + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + jTable.getValueAt(invoiceIteration, 2) + "','" + insertID + "')";
+                        + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + jTable.getValueAt(invoiceIteration, 2) + "','" + inv_no + "')";
                 System.out.println(query);
                 SQLConnector.iud(query);
 
@@ -596,7 +600,7 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
                 parameterSet.put("Telephone", telephone);
                 parameterSet.put("Date", "Date: " + date);
                 parameterSet.put("Time", "Time: " + time);
-                parameterSet.put("Invoice_No", "#" + String.format("%06d", insertID));
+                parameterSet.put("Invoice_No", "#" + String.format("%06d", inv_no));
 
                 parameterSet.put("Net_Total", jTextField1.getText());
                 parameterSet.put("Discount", jTextField17.getText());
