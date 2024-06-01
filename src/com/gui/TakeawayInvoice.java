@@ -21,7 +21,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     public void setDefaultComponent() {
         jTextField2.grabFocus();
         jPanel3.removeAll();
-        jPanel3.add(new InvoiceCategoryGrid(), BorderLayout.CENTER);
+        jPanel3.add(new InvoiceCategoryGrid(this.jPanel3), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
 
     }
@@ -249,6 +249,11 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         });
         jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTable1.setShowHorizontalLines(true);
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable1KeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
@@ -781,7 +786,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             takeAwayVector.add(takeAwayData);
         }
         jPanel3.removeAll();
-        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1), BorderLayout.CENTER);
+        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1,this.jPanel3), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
     }//GEN-LAST:event_jButton25ActionPerformed
 
@@ -868,6 +873,16 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         cashierHome.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
+        if (evt.getKeyCode() == 127) {
+            int row = jTable1.getSelectedRow();
+            DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
+            billTable.removeRow(row);
+            jTable1.setModel(billTable);
+            loadTotalBillValue();
+        }
+    }//GEN-LAST:event_jTable1KeyReleased
 
     public static void main(String args[]) {
         FlatDarkLaf.setup();

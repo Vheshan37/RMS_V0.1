@@ -21,15 +21,10 @@ import javax.swing.Timer;
 public class AdminPanel extends javax.swing.JFrame {
 
     public AdminPanel() {
-        System.out.println("1");
         initComponents();
-        System.out.println("2");
         SetDefaultComponents();
-        System.out.println("3");
         addPanelToCenter(jButton1, new Dashboard());
-        System.out.println("4");
         setTimer();
-        System.out.println("5");
     }
 
     public void setTimer() {

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -22,10 +23,15 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
 
     Vector<TakeawayBillData> takeAwayVector;
     JTable jTable;
-    String locationID;
-    
-    public InvoicePaymentPanel(String billAmount, Vector takeAwayData, JTable jTable) {
+    String locationID = "5";
+
+    private static JPanel loadPanel;
+
+    public InvoicePaymentPanel(String billAmount, Vector takeAwayData, JTable jTable, JPanel jPanel) {
         initComponents();
+
+        loadPanel = jPanel;
+
         takeAwayVector = takeAwayData;
         this.jTable = jTable;
         setDefaultComponents(billAmount);
@@ -44,8 +50,8 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
             if (ctrlTable.next()) {
                 billDiscount = ctrlTable.getInt("bill_disc");
                 billCommission = ctrlTable.getInt("bill_com");
-                jTextField17.setText(String.valueOf(billDiscount) + "%");
-                jTextField18.setText(String.valueOf(billCommission) + "%");
+                jTextField17.setText(String.valueOf(billDiscount));
+                jTextField18.setText(String.valueOf(billCommission));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,12 +181,13 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel9)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel9)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,10 +276,11 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         jLabel17.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(23, 37, 42));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("Discount");
+        jLabel17.setText("Discount (%)");
 
         jTextField17.setBackground(new java.awt.Color(255, 255, 255));
         jTextField17.setForeground(new java.awt.Color(23, 37, 42));
+        jTextField17.setText("0");
         jTextField17.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         jTextField17.setEnabled(false);
 
@@ -303,10 +311,11 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         jLabel18.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(23, 37, 42));
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel18.setText("Service Charges");
+        jLabel18.setText("Service Charges (%)");
 
         jTextField18.setBackground(new java.awt.Color(255, 255, 255));
         jTextField18.setForeground(new java.awt.Color(23, 37, 42));
+        jTextField18.setText("0");
         jTextField18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
         jTextField18.setEnabled(false);
 
@@ -502,9 +511,9 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public void openCategoryGrid() {
-        TakeawayInvoice.jPanel3.removeAll();
-        TakeawayInvoice.jPanel3.add(new InvoiceCategoryGrid(), BorderLayout.CENTER);
-        SwingUtilities.updateComponentTreeUI(TakeawayInvoice.jPanel3);
+        loadPanel.removeAll();
+        loadPanel.add(new InvoiceCategoryGrid(loadPanel), BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(loadPanel);
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -537,35 +546,45 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         String billAmount = jTextField19.getText();
         String cashAmount = jTextField14.getText();
         String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")).format(new Date());
-        String query = "INSERT INTO takeaway_invoice (date_time,amount,paid_amount,payment_method_id)"
-                + "VALUES ('" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1))";
         try {
-            long insertID = SQLConnector.iud(query);
-            System.out.println("Query: " + query);
-            for (TakeawayBillData item : takeAwayVector) {
-                query = "INSERT INTO takeaway_item (product_id,qty,takeaway_invoice_id)"
-                        + "VALUES ('" + item.getId() + "','" + item.getQty() + "','" + insertID + "')";
+            String query = "SELECT * FROM `ctrl`";
+            ResultSet ctrlDataTable = SQLConnector.search(query);
+            ctrlDataTable.next();
+            String inv_no = ctrlDataTable.getString("inv_no");
+
+            int next_inv_no = Integer.parseInt(inv_no) + 1;
+
+            query = "INSERT INTO invoice (inv_no,date_time,amount,paid_amount,payment_method_id,invoice_type_id,discount,service_charge)"
+                    + "VALUES ('" + inv_no + "','" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1),(SELECT `id` FROM `invoice_type` WHERE `type`='Takeaway' LIMIT 1),'" + Integer.parseInt(jTextField17.getText()) + "','" + Integer.parseInt(jTextField18.getText()) + "')";
+            SQLConnector.iud(query);
+            for (int invoiceIteration = 0; invoiceIteration < jTable.getRowCount(); invoiceIteration++) {
+
+                query = "SELECT * FROM `product` WHERE `id`='" + jTable.getValueAt(invoiceIteration, 0) + "'";
+                ResultSet productTable = SQLConnector.search(query);
+                productTable.next();
+
+                query = "INSERT INTO invoice_item (product_id,qty,invoice_inv_no,unit_price)"
+                        + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + jTable.getValueAt(invoiceIteration, 2) + "','" + inv_no + "','" + productTable.getString("sale_price") + "')";
                 SQLConnector.iud(query);
 
-                query = "SELECT * FROM `location_stock` INNER JOIN `product` ON `product`.`id`=`location_stock`.`product_id` WHERE `product_id`='" + item.getId() + "'";
+                query = "SELECT * FROM `location_stock` WHERE `location_stock`.`product_id`='" + jTable.getValueAt(invoiceIteration, 0) + "'";
                 ResultSet locationStockTable = SQLConnector.search(query);
                 if (locationStockTable.next()) {
                     double stockQty = locationStockTable.getDouble("qty");
-                    double measure = locationStockTable.getDouble("measure");
-                    double updateQty = stockQty - (Integer.parseInt(item.getQty()) * measure);
-                    query = "UPDATE location_stock SET qty='" + updateQty + "' WHERE product_id='" + item.getId() + "' AND location_id='" + locationID + "'";
+                    double measure = productTable.getDouble("measure");
+                    double updateQty = stockQty - (Integer.parseInt(String.valueOf(jTable.getValueAt(invoiceIteration, 2))) * measure);
+                    query = "UPDATE location_stock SET qty='" + updateQty + "' WHERE product_id='" + jTable.getValueAt(invoiceIteration, 0) + "' AND location_id='" + locationID + "'";
                     SQLConnector.iud(query);
                 } else {
-                    query = "SELECT * FROM `product` WHERE `product_id`='" + item.getId() + "'";
-                    ResultSet productTable = SQLConnector.search(query);
-                    productTable.next();
                     double measure = productTable.getDouble("measure");
-                    double updateQty = Integer.parseInt(item.getQty()) * measure;
+                    double updateQty = -(Integer.parseInt(String.valueOf(jTable.getValueAt(invoiceIteration, 2))) * measure);
                     query = "INSERT INTO location_stock (product_id,location_id,qty) "
-                            + "VALUES ('" + item.getId() + "','" + locationID + "','" + updateQty + "')";
+                            + "VALUES ('" + jTable.getValueAt(invoiceIteration, 0) + "','" + locationID + "','" + updateQty + "')";
+                    SQLConnector.iud(query);
                 }
             }
-            System.out.println("Billing Completed");
+            query = "UPDATE ctrl SET inv_no='" + String.format("%06d", next_inv_no) + "'";
+            SQLConnector.iud(query);
 
             query = "SELECT * FROM `ctrl`";
             ResultSet ctrlTable = SQLConnector.search(query);
@@ -573,8 +592,8 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
                 String name = ctrlTable.getString("system_name");
                 String address = ctrlTable.getString("address");
                 String telephone;
-                if (ctrlTable.getString("telephone_2").equals("") || ctrlTable.getString("telephone_2").isEmpty()) {
-                    telephone = "Tel: " + ctrlTable.getString("telephone_1") + " / " + ctrlTable.getString("telephone_1");
+                if (!ctrlTable.getString("telephone_2").equals("") && !ctrlTable.getString("telephone_2").isEmpty()) {
+                    telephone = "Tel: " + ctrlTable.getString("telephone_1") + " / " + ctrlTable.getString("telephone_2");
                 } else {
                     telephone = "Tel: " + ctrlTable.getString("telephone_1");
                 }
@@ -590,11 +609,11 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
                 parameterSet.put("Telephone", telephone);
                 parameterSet.put("Date", "Date: " + date);
                 parameterSet.put("Time", "Time: " + time);
-                parameterSet.put("Invoice_No", "#" + String.format("%06d", insertID));
+                parameterSet.put("Invoice_No", "#" + inv_no);
 
                 parameterSet.put("Net_Total", jTextField1.getText());
-                parameterSet.put("Discount", jTextField17.getText());
-                parameterSet.put("Commission", jTextField18.getText());
+                parameterSet.put("Discount", jTextField17.getText() + "%");
+                parameterSet.put("Commission", jTextField18.getText() + "%");
                 parameterSet.put("Paid_Amount", jTextField14.getText());
                 parameterSet.put("Balance", jTextField20.getText());
                 parameterSet.put("Total_Value", jTextField19.getText());
@@ -624,9 +643,6 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTextField14KeyReleased
 
-    private void viewCategoryProduct(String categoryID) {
-        System.out.println(categoryID);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
