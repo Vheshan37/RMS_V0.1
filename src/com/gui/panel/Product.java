@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class Product extends javax.swing.JPanel {
 
@@ -1772,6 +1776,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField24.setBackground(new java.awt.Color(29, 54, 64));
         jTextField24.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField24.setEnabled(false);
         jTextField24.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField24KeyReleased(evt);
@@ -1820,6 +1825,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField27.setBackground(new java.awt.Color(29, 54, 64));
         jTextField27.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField27.setEnabled(false);
         jTextField27.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField27ActionPerformed(evt);
@@ -2448,6 +2454,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField40.setBackground(new java.awt.Color(29, 54, 64));
         jTextField40.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField40.setEnabled(false);
 
         jLabel88.setBackground(new java.awt.Color(222, 242, 241));
         jLabel88.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -2455,6 +2462,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField41.setBackground(new java.awt.Color(29, 54, 64));
         jTextField41.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField41.setEnabled(false);
         jTextField41.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField41KeyReleased(evt);
@@ -3094,6 +3102,7 @@ public class Product extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private static int totalValue;
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         if (jComboBox10.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(this, "Please select a valid location", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -3108,6 +3117,7 @@ public class Product extends javax.swing.JPanel {
             try {
                 long last_inserted_id = SQLConnector.iud(query);
                 for (int issueIteration = 0; issueIteration < jTable3.getRowCount(); issueIteration++) {
+                    totalValue += Integer.parseInt(String.valueOf(jTable3.getValueAt(issueIteration, 4)));
                     query = "INSERT INTO issue_item (issue_id,product_id,qty) "
                             + "VALUES ('" + last_inserted_id + "','" + jTable3.getValueAt(issueIteration, 0) + "','" + jTable3.getValueAt(issueIteration, 2) + "')";
                     SQLConnector.iud(query);
@@ -3136,6 +3146,7 @@ public class Product extends javax.swing.JPanel {
                     }
                 }
                 JOptionPane.showMessageDialog(this, "Transaction completed", "Complete", JOptionPane.INFORMATION_MESSAGE);
+                viewIssueJasperReport(last_inserted_id, totalValue);
                 clearnIssuePage();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -3283,6 +3294,9 @@ public class Product extends javax.swing.JPanel {
                                 }
                             }
                         }
+
+                        viewGrnJasperReport();
+
                         clearGrnPage();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3328,6 +3342,9 @@ public class Product extends javax.swing.JPanel {
                             }
                         }
                     }
+
+                    viewGrnJasperReport();
+
                     clearGrnPage();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3335,6 +3352,77 @@ public class Product extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void viewGrnJasperReport() {
+        try {
+            ResultSet ctrlTable = SQLConnector.search("SELECT * FROM `ctrl`");
+            if (ctrlTable.next()) {
+                String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd")).format(new Date());
+                String date = formattedDateTime;
+                formattedDateTime = (new SimpleDateFormat("HH:mm a")).format(new Date());
+                String time = formattedDateTime;
+
+                HashMap<String, Object> parameterSet = new HashMap<>();
+                parameterSet.put("SystemName", ctrlTable.getString("system_name"));
+                parameterSet.put("Date", "Date: " + date);
+                parameterSet.put("Time", "Time: " + time);
+
+                if (jTextField15.getText().isEmpty()) {
+                    parameterSet.put("InvoiceNo", "Not set");
+                } else {
+                    parameterSet.put("InvoiceNo", "Invoice No: " + jTextField15.getText());
+                }
+                parameterSet.put("Supplier", "Supplier: " + String.valueOf(jComboBox8.getSelectedItem()));
+                parameterSet.put("Total", "Rs. " + jTextField21.getText() + ".00");
+                parameterSet.put("PaymentMethod", String.valueOf(jComboBox9.getSelectedItem()));
+
+                JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable2.getModel());
+
+                String path = "src/com/reports/newGRN.jasper";
+
+                JasperPrint report = JasperFillManager.fillReport(path, parameterSet, dataSource);
+                JasperViewer.viewReport(report, false);
+            } else {
+                System.out.println("No records found in 'CTRL'");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void viewIssueJasperReport(long issueID, int totalValue) {
+        System.out.println(issueID);
+        System.out.println(totalValue);
+        try {
+            ResultSet ctrlTable = SQLConnector.search("SELECT * FROM `ctrl`");
+            if (ctrlTable.next()) {
+                String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd")).format(new Date());
+                String date = formattedDateTime;
+                formattedDateTime = (new SimpleDateFormat("HH:mm a")).format(new Date());
+                String time = formattedDateTime;
+
+                HashMap<String, Object> parameterSet = new HashMap<>();
+                parameterSet.put("SystemName", ctrlTable.getString("system_name"));
+                parameterSet.put("Date", "Date: " + date);
+                parameterSet.put("Time", "Time: " + time);
+                parameterSet.put("IssueNo", "Issue No: #" + String.format("%08d", issueID));
+                parameterSet.put("Location", "Location: " + String.valueOf(jComboBox10.getSelectedItem()));
+                parameterSet.put("Total", "Rs. " + String.valueOf(totalValue) + ".00");
+                parameterSet.put("Employee", String.valueOf(jComboBox11.getSelectedItem()));
+
+                JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable3.getModel());
+
+                String path = "src/com/reports/newIssue.jasper";
+
+                JasperPrint report = JasperFillManager.fillReport(path, parameterSet, dataSource);
+                JasperViewer.viewReport(report, false);
+            } else {
+                System.out.println("No records found in 'CTRL'");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void jTextField21KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField21KeyReleased
         // TODO add your handling code here:
@@ -3364,7 +3452,7 @@ public class Product extends javax.swing.JPanel {
         if (evt.getKeyCode() == 10) {
             int value = Integer.parseInt(jTextField18.getText()) * Integer.parseInt(jTextField19.getText());
             jTextField20.setText(String.valueOf(value));
-            jTextField20.grabFocus();
+            jButton9.grabFocus();
         }
     }//GEN-LAST:event_jTextField19KeyReleased
 
