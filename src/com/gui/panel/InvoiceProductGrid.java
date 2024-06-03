@@ -1,6 +1,5 @@
 package com.gui.panel;
 
-import com.gui.TakeawayInvoice;
 import com.model.SQLConnector;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,16 +7,25 @@ import java.awt.GridLayout;
 import java.sql.ResultSet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class InvoiceProductGrid extends javax.swing.JPanel {
 
     private static JPanel loadPanel;
+    private static JTextField loadTextField1;
+    private static JTextField loadTextField2;
+    private static JTextField loadTextField3;
+    private static JTextField loadTextField4;
 
-    public InvoiceProductGrid(String category, String id, JPanel jPanel) {
+    public InvoiceProductGrid(String category, String id, JPanel jPanel, JTextField jTextField1, JTextField jTextField2, JTextField jTextField3, JTextField jTextField4) {
         initComponents();
 
-        loadPanel = jPanel;
+        this.loadPanel = jPanel;
+        this.loadTextField1 = jTextField1;
+        this.loadTextField2 = jTextField2;
+        this.loadTextField3 = jTextField3;
+        this.loadTextField4 = jTextField4;
 
         jLabel2.setText(category);
 
@@ -56,10 +64,10 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
                 jButton.setForeground(new Color(222, 242, 241));
 
                 jButton.addActionListener(e -> {
-                    TakeawayInvoice.jTextField2.setText(productID);
-                    TakeawayInvoice.jTextField3.setText(productName);
-                    TakeawayInvoice.jTextField5.setText(String.valueOf(productPrice));
-                    TakeawayInvoice.jTextField4.grabFocus();
+                    loadTextField1.setText(productID);
+                    loadTextField2.setText(productName);
+                    loadTextField3.setText(String.valueOf(productPrice));
+                    loadTextField4.grabFocus();
                 });
 
                 jPanel.add(jButton);
@@ -202,9 +210,9 @@ public class InvoiceProductGrid extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TakeawayInvoice.jPanel3.removeAll();
-        TakeawayInvoice.jPanel3.add(new InvoiceCategoryGrid(loadPanel), BorderLayout.CENTER);
-        SwingUtilities.updateComponentTreeUI(TakeawayInvoice.jPanel3);
+        loadPanel.removeAll();
+        loadPanel.add(new InvoiceCategoryGrid(loadPanel, loadTextField1, loadTextField2, loadTextField3, loadTextField4), BorderLayout.CENTER);
+        SwingUtilities.updateComponentTreeUI(loadPanel);
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

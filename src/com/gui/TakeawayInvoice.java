@@ -21,19 +21,22 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     public void setDefaultComponent() {
         jTextField2.grabFocus();
         jPanel3.removeAll();
-        jPanel3.add(new InvoiceCategoryGrid(this.jPanel3), BorderLayout.CENTER);
+        jPanel3.add(new InvoiceCategoryGrid(this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
 
     }
 
     public void loadTotalBillValue() {
         int totalValue = 0;
-        for (int row = 0; row < jTable1.getRowCount(); row++) {
+        if (jTable1.getRowCount() == 0) {
+            jTextField7.setText("0");
+        } else {
+            for (int row = 0; row < jTable1.getRowCount(); row++) {
 
-            int value = Integer.parseInt(String.valueOf(jTable1.getValueAt(row, 4)));
-            System.out.println(value);
-            totalValue += value;
-            jTextField7.setText(String.valueOf(totalValue));
+                int value = Integer.parseInt(String.valueOf(jTable1.getValueAt(row, 4)));
+                totalValue += value;
+                jTextField7.setText(String.valueOf(totalValue));
+            }
         }
     }
 
@@ -70,7 +73,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
@@ -167,7 +169,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTextField1.setText("Customer Mobile");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -264,7 +265,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jTextField7.setBackground(new java.awt.Color(23, 37, 42));
         jTextField7.setForeground(new java.awt.Color(255, 153, 0));
         jTextField7.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField7.setText("0.0");
+        jTextField7.setText("0");
         jTextField7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 10));
         jTextField7.setEnabled(false);
 
@@ -339,16 +340,12 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(222, 242, 241));
         jButton1.setText("Return");
         jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        jButton2.setBackground(new java.awt.Color(23, 37, 42));
-        jButton2.setForeground(new java.awt.Color(222, 242, 241));
-        jButton2.setText("Bill Cancel");
-        jButton2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         jButton3.setBackground(new java.awt.Color(23, 37, 42));
         jButton3.setForeground(new java.awt.Color(222, 242, 241));
@@ -380,9 +377,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -390,7 +385,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -413,6 +407,11 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton11.setForeground(new java.awt.Color(23, 37, 42));
         jButton11.setText("9");
         jButton11.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setBackground(new java.awt.Color(222, 242, 241));
         jButton12.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -443,6 +442,11 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton16.setForeground(new java.awt.Color(23, 37, 42));
         jButton16.setText("2");
         jButton16.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton16ActionPerformed(evt);
+            }
+        });
 
         jButton17.setBackground(new java.awt.Color(222, 242, 241));
         jButton17.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -455,6 +459,11 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton18.setForeground(new java.awt.Color(23, 37, 42));
         jButton18.setText("0");
         jButton18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton18ActionPerformed(evt);
+            }
+        });
 
         jButton19.setBackground(new java.awt.Color(222, 242, 241));
         jButton19.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -466,6 +475,11 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jButton20.setForeground(new java.awt.Color(23, 37, 42));
         jButton20.setText(".");
         jButton20.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton20ActionPerformed(evt);
+            }
+        });
 
         jButton21.setBackground(new java.awt.Color(222, 242, 241));
         jButton21.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -520,30 +534,28 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton18, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                            .addComponent(jButton20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jButton22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -688,10 +700,10 @@ public class TakeawayInvoice extends javax.swing.JFrame {
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -741,11 +753,15 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
+        TableFloorSelection tableSelection = new TableFloorSelection();
+        tableSelection.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
+        RoomFloorSelection roomSelection = new RoomFloorSelection();
+        roomSelection.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -786,7 +802,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             takeAwayVector.add(takeAwayData);
         }
         jPanel3.removeAll();
-        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1,this.jPanel3), BorderLayout.CENTER);
+        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Takeaway", "", ""), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
     }//GEN-LAST:event_jButton25ActionPerformed
 
@@ -815,7 +831,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
                 jTable1.setModel(invoiceTable);
                 loadTotalBillValue();
             }
-
             clearInputDate();
         }
     }//GEN-LAST:event_jTextField6KeyReleased
@@ -825,7 +840,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         for (int row = 0; row < jTable1.getRowCount(); row++) {
 
             String id = String.valueOf(jTable1.getValueAt(row, 0));
-            System.out.println(id + " - " + jTextField2.getText());
             if (id.equals(jTextField2.getText())) {
                 String oldQty = String.valueOf(jTable1.getValueAt(row, 2));
                 String oldValue = String.valueOf(jTable1.getValueAt(row, 4));
@@ -875,14 +889,32 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
-        if (evt.getKeyCode() == 127) {
-            int row = jTable1.getSelectedRow();
-            DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
-            billTable.removeRow(row);
-            jTable1.setModel(billTable);
-            loadTotalBillValue();
+        if (jTable1.getRowCount() != 0) {
+            if (evt.getKeyCode() == 127) {
+                int row = jTable1.getSelectedRow();
+                DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
+                billTable.removeRow(row);
+                jTable1.setModel(billTable);
+                loadTotalBillValue();
+            }
         }
     }//GEN-LAST:event_jTable1KeyReleased
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton16ActionPerformed
+
+    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton20ActionPerformed
+
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton18ActionPerformed
 
     public static void main(String args[]) {
         FlatDarkLaf.setup();
@@ -907,7 +939,6 @@ public class TakeawayInvoice extends javax.swing.JFrame {
     public static javax.swing.JButton jButton17;
     public static javax.swing.JButton jButton18;
     public static javax.swing.JButton jButton19;
-    public static javax.swing.JButton jButton2;
     public static javax.swing.JButton jButton20;
     public static javax.swing.JButton jButton21;
     public static javax.swing.JButton jButton22;

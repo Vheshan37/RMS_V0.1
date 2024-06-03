@@ -195,7 +195,7 @@ public class ProductView extends javax.swing.JFrame {
             productTableModel.setRowCount(0);
             while (productTable.next()) {
                 Vector productRow = new Vector();
-                productRow.add(String.format("%06d", productTable.getInt("id")));
+                productRow.add(String.format("%08d", productTable.getInt("id")));
                 productRow.add(productTable.getString("name"));
                 productRow.add(productTable.getString("category.category"));
                 productRow.add(productTable.getString("sale_price"));

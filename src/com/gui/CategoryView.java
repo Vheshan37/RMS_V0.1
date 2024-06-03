@@ -195,7 +195,7 @@ public class CategoryView extends javax.swing.JFrame {
             categoryTableModel.setRowCount(0);
             while (categoryTable.next()) {
                 Vector productRow = new Vector(); 
-                productRow.add(String.format("%06d", categoryTable.getInt("id")));
+                productRow.add(String.format("%08d", categoryTable.getInt("id")));
                 productRow.add(categoryTable.getString("category"));
                 productRow.add(categoryTable.getString("product_department.department"));
                 categoryTableModel.addRow(productRow);

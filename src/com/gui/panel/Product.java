@@ -24,6 +24,7 @@ public class Product extends javax.swing.JPanel {
     }
 
     public void setComponents() {
+        setProductOverView();
         setDepartmentComboBox();
         setCategoryComboBox();
         setUnitComboBox();
@@ -33,6 +34,93 @@ public class Product extends javax.swing.JPanel {
         setLocationComboBox();
         loadEmployeeComboBox();
         damageReturnPage();
+    }
+
+    private void setProductOverView() {
+
+        try {
+            String query = "SELECT * FROM `product` INNER JOIN `product_department` ON `product_department`.`id`=`product`.`product_department_id`";
+            int productCount = 0;
+            int botCount = 0;
+            int kotCount = 0;
+            ResultSet productTable = SQLConnector.search(query);
+            while (productTable.next()) {
+                productCount += 1;
+                if (productTable.getString("department").equals("BOT")) {
+                    botCount += 1;
+                } else {
+                    kotCount += 1;
+                }
+            }
+
+            jLabel2.setText(String.valueOf(productCount));
+            jLabel4.setText(String.valueOf(kotCount));
+            jLabel5.setText(String.valueOf(botCount));
+
+            query = "SELECT SUM(qty) AS `count`, `name`,`department` FROM invoice_item "
+                    + "INNER JOIN product ON product.id=invoice_item.product_id "
+                    + "INNER JOIN product_department ON product_department.id=product.product_department_id "
+                    + "WHERE product_department.department='BOT' "
+                    + "GROUP BY `name` "
+                    + "ORDER BY `count` DESC LIMIT 1";
+            ResultSet popularBOT = SQLConnector.search(query);
+            if (popularBOT.next()) {
+                jLabel10.setText(popularBOT.getString("name"));
+            } else {
+                jLabel10.setText("???");
+            }
+
+            query = "SELECT SUM(qty) AS `count`, `name`,`department` FROM invoice_item "
+                    + "INNER JOIN product ON product.id=invoice_item.product_id "
+                    + "INNER JOIN product_department ON product_department.id=product.product_department_id "
+                    + "WHERE product_department.department='KOT' "
+                    + "GROUP BY `name` "
+                    + "ORDER BY `count` DESC LIMIT 1";
+            ResultSet popularKOT = SQLConnector.search(query);
+            if (popularKOT.next()) {
+                jLabel8.setText(popularBOT.getString("name"));
+            } else {
+                jLabel8.setText("???");
+            }
+
+            query = "SELECT SUM(qty) AS `count`, `name`,`department` FROM invoice_item "
+                    + "INNER JOIN product ON product.id=invoice_item.product_id "
+                    + "INNER JOIN product_department ON product_department.id=product.product_department_id "
+                    + "WHERE product_department.department='BOT' "
+                    + "GROUP BY `name` "
+                    + "ORDER BY `count` ASC LIMIT 1";
+            ResultSet leastPopularBOT = SQLConnector.search(query);
+            if (leastPopularBOT.next()) {
+                jLabel14.setText(leastPopularBOT.getString("name"));
+            } else {
+                jLabel14.setText("???");
+            }
+
+            query = "SELECT SUM(qty) AS `count`, `name`,`department` FROM invoice_item "
+                    + "INNER JOIN product ON product.id=invoice_item.product_id "
+                    + "INNER JOIN product_department ON product_department.id=product.product_department_id "
+                    + "WHERE product_department.department='KOT' "
+                    + "GROUP BY `name` "
+                    + "ORDER BY `count` ASC LIMIT 1";
+            ResultSet leastPopularKOT = SQLConnector.search(query);
+            if (leastPopularKOT.next()) {
+                jLabel12.setText(leastPopularKOT.getString("name"));
+            } else {
+                jLabel12.setText("???");
+            }
+
+            query = "SELECT COUNT(*) AS `active_products` FROM (SELECT COUNT(invoice_item.product_id),invoice_item.product_id FROM invoice_item	GROUP BY invoice_item.product_id) AS sub_table;";
+            ResultSet activeProducts = SQLConnector.search(query);
+            if (activeProducts.next()) {
+                jLabel16.setText(activeProducts.getString("active_products"));
+            } else {
+                jLabel16.setText("???");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static HashMap<String, String> paymentMethodMap = new HashMap<>();
@@ -450,7 +538,7 @@ public class Product extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(222, 242, 241));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("420");
+        jLabel2.setText("???");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -481,7 +569,7 @@ public class Product extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(222, 242, 241));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("420");
+        jLabel4.setText("???");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -509,7 +597,7 @@ public class Product extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(222, 242, 241));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("420");
+        jLabel5.setText("???");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Black", 1, 22)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(222, 242, 241));
@@ -548,7 +636,7 @@ public class Product extends javax.swing.JPanel {
         jLabel8.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(222, 242, 241));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("C.Devilled");
+        jLabel8.setText("???");
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -579,7 +667,7 @@ public class Product extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(222, 242, 241));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Eristoff 750ml");
+        jLabel10.setText("???");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -608,12 +696,12 @@ public class Product extends javax.swing.JPanel {
         jLabel11.setFont(new java.awt.Font("Segoe UI Black", 1, 22)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(222, 242, 241));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("Least BOT Product");
+        jLabel11.setText("Least Popular KOT");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(222, 242, 241));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("Eristoff 750ml");
+        jLabel12.setText("???");
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -639,12 +727,12 @@ public class Product extends javax.swing.JPanel {
         jLabel13.setFont(new java.awt.Font("Segoe UI Black", 1, 22)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(222, 242, 241));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("Least BOT Product");
+        jLabel13.setText("Least Popular BOT");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(222, 242, 241));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("Eristoff 750ml");
+        jLabel14.setText("???");
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
@@ -693,7 +781,7 @@ public class Product extends javax.swing.JPanel {
         jLabel16.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(222, 242, 241));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel16.setText("015");
+        jLabel16.setText("???");
 
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
         jPanel23.setLayout(jPanel23Layout);
@@ -947,7 +1035,7 @@ public class Product extends javax.swing.JPanel {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(241, Short.MAX_VALUE))
+                .addContainerGap(244, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Create", jPanel2);
@@ -1202,7 +1290,7 @@ public class Product extends javax.swing.JPanel {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
                 .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1345,6 +1433,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField17.setBackground(new java.awt.Color(29, 54, 64));
         jTextField17.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField17.setEnabled(false);
 
         jLabel48.setBackground(new java.awt.Color(222, 242, 241));
         jLabel48.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -1675,6 +1764,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField23.setBackground(new java.awt.Color(29, 54, 64));
         jTextField23.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField23.setEnabled(false);
 
         jLabel60.setBackground(new java.awt.Color(222, 242, 241));
         jLabel60.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -1706,6 +1796,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField26.setBackground(new java.awt.Color(29, 54, 64));
         jTextField26.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField26.setEnabled(false);
         jTextField26.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField26ActionPerformed(evt);
@@ -2055,6 +2146,7 @@ public class Product extends javax.swing.JPanel {
 
         jTextField36.setBackground(new java.awt.Color(29, 54, 64));
         jTextField36.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
+        jTextField36.setEnabled(false);
         jTextField36.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField36KeyReleased(evt);
@@ -2179,7 +2271,7 @@ public class Product extends javax.swing.JPanel {
             jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel48Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2356,7 +2448,6 @@ public class Product extends javax.swing.JPanel {
 
         jTextField40.setBackground(new java.awt.Color(29, 54, 64));
         jTextField40.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        jTextField40.setEnabled(false);
 
         jLabel88.setBackground(new java.awt.Color(222, 242, 241));
         jLabel88.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
@@ -2364,7 +2455,6 @@ public class Product extends javax.swing.JPanel {
 
         jTextField41.setBackground(new java.awt.Color(29, 54, 64));
         jTextField41.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1));
-        jTextField41.setEnabled(false);
         jTextField41.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField41KeyReleased(evt);
@@ -2494,7 +2584,7 @@ public class Product extends javax.swing.JPanel {
             jPanel49Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel49Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
