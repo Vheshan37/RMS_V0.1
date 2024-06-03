@@ -1,6 +1,5 @@
 package com.gui.panel;
 
-import com.gui.TakeawayInvoice;
 import com.model.SQLConnector;
 import com.model.TakeawayBillData;
 import java.awt.BorderLayout;
@@ -12,6 +11,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -22,15 +22,31 @@ import net.sf.jasperreports.view.JasperViewer;
 public class InvoicePaymentPanel extends javax.swing.JPanel {
 
     Vector<TakeawayBillData> takeAwayVector;
-    JTable jTable;
+    private static JTable jTable;
     String locationID = "5";
 
     private static JPanel loadPanel;
+    private static JTextField loadTextField1;
+    private static JTextField loadTextField2;
+    private static JTextField loadTextField3;
+    private static JTextField loadTextField4;
+    private static JTextField loadTextField7;
+    private static String loadBillType;
+    private static String loadTableID;
+    private static String loadReservationID;
 
-    public InvoicePaymentPanel(String billAmount, Vector takeAwayData, JTable jTable, JPanel jPanel) {
+    public InvoicePaymentPanel(String billAmount, Vector takeAwayData, JTable jTable, JPanel jPanel, JTextField jTextField1, JTextField jTextField2, JTextField jTextField3, JTextField jTextField4, JTextField jTextField7, String billTYpe, String tableID, String reservationID) {
         initComponents();
 
         loadPanel = jPanel;
+        this.loadTextField1 = jTextField1;
+        this.loadTextField2 = jTextField2;
+        this.loadTextField3 = jTextField3;
+        this.loadTextField4 = jTextField4;
+        this.loadTextField7 = jTextField7;
+        this.loadBillType = billTYpe;
+        this.loadTableID = tableID;
+        this.loadReservationID = reservationID;
 
         takeAwayVector = takeAwayData;
         this.jTable = jTable;
@@ -48,8 +64,18 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
         try {
             ResultSet ctrlTable = SQLConnector.search(query);
             if (ctrlTable.next()) {
-                billDiscount = ctrlTable.getInt("bill_disc");
-                billCommission = ctrlTable.getInt("bill_com");
+
+                if (loadBillType == "Table") {
+                    billDiscount = ctrlTable.getInt("table_disc");
+                    billCommission = ctrlTable.getInt("table_com");
+                } else if (loadBillType == "Takeaway") {
+                    billDiscount = ctrlTable.getInt("bill_disc");
+                    billCommission = ctrlTable.getInt("bill_com");
+                } else if (loadBillType == "Room") {
+                    billDiscount = ctrlTable.getInt("room_disc");
+                    billCommission = ctrlTable.getInt("room_com");
+                }
+
                 jTextField17.setText(String.valueOf(billDiscount));
                 jTextField18.setText(String.valueOf(billCommission));
             }
@@ -512,24 +538,52 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
 
     public void openCategoryGrid() {
         loadPanel.removeAll();
-        loadPanel.add(new InvoiceCategoryGrid(loadPanel), BorderLayout.CENTER);
+        loadPanel.add(new InvoiceCategoryGrid(loadPanel, this.loadTextField4, this.loadTextField4, this.loadTextField4, this.loadTextField4), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(loadPanel);
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addInvoiceBill();
         setDefaultInvoicePage();
+        if (loadBillType == "Table") {
+            clearTableStatus();
+        } else if (loadBillType == "Room") {
+            clearRoomStatus();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void clearRoomStatus() {
+        String query = "UPDATE `room_reservation` SET `reservation_status_id`=(SELECT `id` FROM `reservation_status` WHERE `status`='Closed' LIMIT 1) WHERE room_id='" + loadTableID + "' AND id='" + loadReservationID + "'";
+        try {
+            SQLConnector.iud(query);
+            query = "UPDATE `room` SET `table_room_status_id`=(SELECT `id` FROM `table_room_status` WHERE `status`='Available') WHERE id='" + loadTableID + "'";
+            SQLConnector.iud(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearTableStatus() {
+        String query = "UPDATE `table_reservation` SET `reservation_status_id`=(SELECT `id` FROM `reservation_status` WHERE `status`='Closed' LIMIT 1) WHERE table_id='" + loadTableID + "' AND id='" + loadReservationID + "'";
+        try {
+            SQLConnector.iud(query);
+            query = "UPDATE `table` SET `table_room_status_id`=(SELECT `id` FROM `table_room_status` WHERE `status`='Available') WHERE id='" + loadTableID + "'";
+            SQLConnector.iud(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         addInvoiceBill();
         setDefaultInvoicePage();
+        clearTableStatus();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     public void setDefaultInvoicePage() {
-        DefaultTableModel invoiceTable = (DefaultTableModel) TakeawayInvoice.jTable1.getModel();
+        DefaultTableModel invoiceTable = (DefaultTableModel) jTable.getModel();
         invoiceTable.setRowCount(0);
-        TakeawayInvoice.jTextField7.setText("");
+        this.jTextField17.setText("");
         jTextField1.setText("");
         jTextField14.setText("");
         jTextField15.setText("");
@@ -554,8 +608,14 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
 
             int next_inv_no = Integer.parseInt(inv_no) + 1;
 
-            query = "INSERT INTO invoice (inv_no,date_time,amount,paid_amount,payment_method_id,invoice_type_id,discount,service_charge)"
-                    + "VALUES ('" + inv_no + "','" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1),(SELECT `id` FROM `invoice_type` WHERE `type`='Takeaway' LIMIT 1),'" + Integer.parseInt(jTextField17.getText()) + "','" + Integer.parseInt(jTextField18.getText()) + "')";
+            if (loadReservationID.isEmpty() && loadReservationID == "") {
+                query = "INSERT INTO invoice (inv_no,date_time,amount,paid_amount,payment_method_id,invoice_type_id,discount,service_charge)"
+                        + "VALUES ('" + inv_no + "','" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1),(SELECT `id` FROM `invoice_type` WHERE `type`='" + loadBillType + "' LIMIT 1),'" + Integer.parseInt(jTextField17.getText()) + "','" + Integer.parseInt(jTextField18.getText()) + "')";
+            } else {
+                query = "INSERT INTO invoice (inv_no,date_time,amount,paid_amount,payment_method_id,invoice_type_id,discount,service_charge,reservation_id)"
+                        + "VALUES ('" + inv_no + "','" + formattedDateTime + "','" + billAmount + "','" + cashAmount + "',(SELECT `id` FROM `payment_method` WHERE `method`='Cash' LIMIT 1),(SELECT `id` FROM `invoice_type` WHERE `type`='" + loadBillType + "' LIMIT 1),'" + Integer.parseInt(jTextField17.getText()) + "','" + Integer.parseInt(jTextField18.getText()) + "','" + loadReservationID + "')";
+            }
+
             SQLConnector.iud(query);
             for (int invoiceIteration = 0; invoiceIteration < jTable.getRowCount(); invoiceIteration++) {
 
@@ -583,7 +643,7 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
                     SQLConnector.iud(query);
                 }
             }
-            query = "UPDATE ctrl SET inv_no='" + String.format("%06d", next_inv_no) + "'";
+            query = "UPDATE ctrl SET inv_no='" + String.format("%08d", next_inv_no) + "'";
             SQLConnector.iud(query);
 
             query = "SELECT * FROM `ctrl`";
@@ -611,15 +671,24 @@ public class InvoicePaymentPanel extends javax.swing.JPanel {
                 parameterSet.put("Time", "Time: " + time);
                 parameterSet.put("Invoice_No", "#" + inv_no);
 
-                parameterSet.put("Net_Total", jTextField1.getText());
+                parameterSet.put("Net_Total", jTextField1.getText() + ".00");
                 parameterSet.put("Discount", jTextField17.getText() + "%");
                 parameterSet.put("Commission", jTextField18.getText() + "%");
-                parameterSet.put("Paid_Amount", jTextField14.getText());
-                parameterSet.put("Balance", jTextField20.getText());
-                parameterSet.put("Total_Value", jTextField19.getText());
+                parameterSet.put("Paid_Amount", jTextField14.getText() + ".00");
+                parameterSet.put("Balance", jTextField20.getText() + ".00");
+                parameterSet.put("Total_Value", "Rs. " + jTextField19.getText() + ".00");
 
                 JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable.getModel());
-                String path = "src/com/reports/invoiceBill.jasper";
+                String path;
+                if (loadBillType != "Takeaway") {
+                    path = "src/com/reports/tableInvoice.jasper";
+                    ResultSet tableData = SQLConnector.search("SELECT * FROM `table` INNER JOIN `floor` ON `floor`.`id`=`table`.`floor_id` WHERE `table`.`id`='" + loadTableID + "'");
+                    tableData.next();
+                    parameterSet.put("Floor", tableData.getString("floor") + " Floor");
+                    parameterSet.put("Table", tableData.getString("table_name"));
+                } else {
+                    path = "src/com/reports/invoiceBill.jasper";
+                }
 
                 JasperPrint report = JasperFillManager.fillReport(path, parameterSet, dataSource);
                 JasperViewer.viewReport(report, false);

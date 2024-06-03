@@ -9,16 +9,25 @@ import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class InvoiceCategoryGrid extends javax.swing.JPanel {
 
     private static JPanel loadPanel;
+    private static JTextField loadTextField1;
+    private static JTextField loadTextField2;
+    private static JTextField loadTextField3;
+    private static JTextField loadTextField4;
 
-    public InvoiceCategoryGrid(JPanel jPanel) {
+    public InvoiceCategoryGrid(JPanel jPanel, JTextField jTextField1, JTextField jTextField2, JTextField jTextField3, JTextField jTextField4) {
         initComponents();
 
         this.loadPanel = jPanel;
+        this.loadTextField1 = jTextField1;
+        this.loadTextField2 = jTextField2;
+        this.loadTextField3 = jTextField3;
+        this.loadTextField4 = jTextField4;
 
         String query1 = "SELECT COUNT(*) AS `num_rows` FROM `category` INNER JOIN `product_department` ON `product_department`.`id`=`category`.`product_department_id` WHERE `product_department`.`department`='KOT'";
         String query2 = "SELECT * FROM `category` INNER JOIN `product_department` ON `product_department`.`id`=`category`.`product_department_id` WHERE `product_department`.`department`='KOT' ORDER BY `category` ASC";
@@ -74,7 +83,7 @@ public class InvoiceCategoryGrid extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "There has no item from this category", "Alert", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         loadPanel.removeAll();
-                        loadPanel.add(new InvoiceProductGrid(categoryName, categoryID, loadPanel), BorderLayout.CENTER);
+                        loadPanel.add(new InvoiceProductGrid(categoryName, categoryID, loadPanel, loadTextField1, loadTextField2, loadTextField3, loadTextField4), BorderLayout.CENTER);
                         SwingUtilities.updateComponentTreeUI(loadPanel);
                     }
                 });
