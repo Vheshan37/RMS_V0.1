@@ -3391,8 +3391,6 @@ public class Product extends javax.swing.JPanel {
     }
 
     private void viewIssueJasperReport(long issueID, int totalValue) {
-        System.out.println(issueID);
-        System.out.println(totalValue);
         try {
             ResultSet ctrlTable = SQLConnector.search("SELECT * FROM `ctrl`");
             if (ctrlTable.next()) {
@@ -3850,6 +3848,7 @@ public class Product extends javax.swing.JPanel {
         refreshLocationReturn();
     }//GEN-LAST:event_jButton24ActionPerformed
 
+    private static int totalReturnValue = 0;
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
         if (jTextField38.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your 'Reason'", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -3865,6 +3864,7 @@ public class Product extends javax.swing.JPanel {
                 try {
                     long insert_id = SQLConnector.iud(query);
                     for (int returnIteration = 0; returnIteration < jTable1.getRowCount(); returnIteration++) {
+                        totalReturnValue += Integer.parseInt(String.valueOf(jTable1.getValueAt(returnIteration, 4)));
                         query = "INSERT INTO location_return_item (product_id,location_return_id,qty) "
                                 + "VALUES ('" + jTable1.getValueAt(returnIteration, 0) + "','" + insert_id + "','" + jTable1.getValueAt(returnIteration, 2) + "')";
                         SQLConnector.iud(query);
@@ -3886,11 +3886,11 @@ public class Product extends javax.swing.JPanel {
                         double getStock = stockTable.getDouble("qty");
                         double returnStock = getStock + returnAmount;
                         query = "UPDATE stock SET qty='" + returnStock + "' WHERE product_id='" + jTable1.getValueAt(returnIteration, 0) + "'";
-                        System.out.println(query);
                         SQLConnector.iud(query);
                     }
 
                     JOptionPane.showMessageDialog(this, "Item returning completed", "Complete", JOptionPane.INFORMATION_MESSAGE);
+                    viewLocationReturnJasperReport(insert_id, totalReturnValue);
                     refreshLocationReturn();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3898,6 +3898,39 @@ public class Product extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jButton25ActionPerformed
+
+    private void viewLocationReturnJasperReport(long returnID, int totalReturnValue) {
+        try {
+            ResultSet ctrlTable = SQLConnector.search("SELECT * FROM `ctrl`");
+            if (ctrlTable.next()) {
+                String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd")).format(new Date());
+                String date = formattedDateTime;
+                formattedDateTime = (new SimpleDateFormat("HH:mm a")).format(new Date());
+                String time = formattedDateTime;
+
+                HashMap<String, Object> parameterSet = new HashMap<>();
+                parameterSet.put("SystemName", ctrlTable.getString("system_name"));
+                parameterSet.put("Location", String.valueOf(jComboBox14.getSelectedItem()));
+                parameterSet.put("Receiver", String.valueOf(jComboBox15.getSelectedItem()));
+                parameterSet.put("Reason", String.valueOf(jTextField38.getText()));
+                parameterSet.put("Date", "Date: " + date);
+                parameterSet.put("Time", "Time: " + time);
+                parameterSet.put("Total", "Rs. " + String.valueOf(totalReturnValue) + ".00");
+                parameterSet.put("ReturnNo", "Return No: #" + String.format("%08d", returnID));
+
+                JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
+
+                String path = "src/com/reports/returnNote.jasper";
+
+                JasperPrint report = JasperFillManager.fillReport(path, parameterSet, dataSource);
+                JasperViewer.viewReport(report, false);
+            } else {
+                System.out.println("No records found in 'CTRL'");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void refreshLocationReturn() {
         jComboBox14.setSelectedIndex(0);

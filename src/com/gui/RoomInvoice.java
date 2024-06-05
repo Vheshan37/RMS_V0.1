@@ -938,7 +938,7 @@ public class RoomInvoice extends javax.swing.JFrame {
                 takeAwayVector.add(takeAwayData);
             }
             jPanel3.removeAll();
-            jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Table", roomMap.get(roomMap.get("roomName")), String.valueOf(reservationID)), BorderLayout.CENTER);
+            jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Room", roomMap.get(roomMap.get("roomName")), String.valueOf(reservationID)), BorderLayout.CENTER);
             SwingUtilities.updateComponentTreeUI(jPanel3);
         }
     }//GEN-LAST:event_jButton25ActionPerformed
