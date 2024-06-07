@@ -15,7 +15,6 @@ public class SQLConnector {
     private static final String password = "Vheshan37@37";
     private static final String url = "jdbc:mysql://localhost:3306/" + db + "?autoReconnect=true&useSSL=false";
 
-    // Method to ensure connection is valid and establish if needed
     public static Connection ensureConnection() throws SQLException, ClassNotFoundException {
         if (connection == null || connection.isClosed() || !connection.isValid(2)) {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -24,19 +23,16 @@ public class SQLConnector {
         return connection;
     }
 
-    // Method to create a Statement
     public static Statement createStatement() throws SQLException, ClassNotFoundException {
         ensureConnection();
         return connection.createStatement();
     }
 
-    // Method to create a PreparedStatement
     public static PreparedStatement prepareStatement(String query) throws SQLException, ClassNotFoundException {
         ensureConnection();
         return connection.prepareStatement(query);
     }
 
-    // Method to execute insert, update, delete operations with last inserted id retrieval
     public static Long iud(String query) throws SQLException, ClassNotFoundException {
         ensureConnection();
         Long lastId = null;
@@ -53,7 +49,6 @@ public class SQLConnector {
         return lastId;
     }
 
-    // Method to execute a search query (unchanged)
     public static ResultSet search(String query) throws SQLException, ClassNotFoundException {
         Statement stmt = createStatement();
         return stmt.executeQuery(query);
