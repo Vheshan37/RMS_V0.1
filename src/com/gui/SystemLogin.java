@@ -2,6 +2,7 @@ package com.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
@@ -14,7 +15,8 @@ public class SystemLogin extends javax.swing.JFrame {
             ctrlTable.next();
             jLabel5.setText(ctrlTable.getString("system_name"));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -303,7 +305,8 @@ public class SystemLogin extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Invalid Details", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }

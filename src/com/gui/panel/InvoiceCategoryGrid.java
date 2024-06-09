@@ -50,13 +50,7 @@ public class InvoiceCategoryGrid extends javax.swing.JPanel {
         }
 
         int numColumns;
-        if (numRows < 8) {
-            numColumns = 4;
-        } else if (numRows < 16) {
-            numColumns = 6;
-        } else {
-            numColumns = 8;
-        }
+        numColumns = (int) Math.ceil(Math.sqrt(numRows));
 
         int gridRows = (int) Math.ceil((double) numRows / numColumns);
 

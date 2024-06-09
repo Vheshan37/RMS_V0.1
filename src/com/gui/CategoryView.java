@@ -2,6 +2,7 @@ package com.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.sql.ResultSet;
 import java.util.Vector;
 import javax.swing.JTextField;
@@ -194,7 +195,7 @@ public class CategoryView extends javax.swing.JFrame {
             DefaultTableModel categoryTableModel = (DefaultTableModel) jTable1.getModel();
             categoryTableModel.setRowCount(0);
             while (categoryTable.next()) {
-                Vector productRow = new Vector(); 
+                Vector productRow = new Vector();
                 productRow.add(String.format("%08d", categoryTable.getInt("id")));
                 productRow.add(categoryTable.getString("category"));
                 productRow.add(categoryTable.getString("product_department.department"));
@@ -202,7 +203,8 @@ public class CategoryView extends javax.swing.JFrame {
             }
             jTable1.setModel(categoryTableModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 

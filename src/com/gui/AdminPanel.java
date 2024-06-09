@@ -6,6 +6,7 @@ import com.gui.panel.Product;
 import com.gui.panel.Report;
 //import com.gui.panel.Supplier;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -48,7 +49,8 @@ public class AdminPanel extends javax.swing.JFrame {
                 jLabel7.setText("?");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
