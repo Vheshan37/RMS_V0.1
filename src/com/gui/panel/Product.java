@@ -4,6 +4,7 @@ import com.gui.CategoryView;
 import com.gui.ProductView;
 import com.model.CostingData;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -122,7 +123,8 @@ public class Product extends javax.swing.JPanel {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
 
     }
@@ -149,7 +151,8 @@ public class Product extends javax.swing.JPanel {
             }
             jComboBox16.setModel(new DefaultComboBoxModel(locationVector));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -166,7 +169,8 @@ public class Product extends javax.swing.JPanel {
             jComboBox11.setModel(new DefaultComboBoxModel(employeeVector));
             jComboBox15.setModel(new DefaultComboBoxModel(employeeVector));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -182,7 +186,8 @@ public class Product extends javax.swing.JPanel {
             jComboBox10.setModel(new DefaultComboBoxModel(locationVector));
             jComboBox14.setModel(new DefaultComboBoxModel(locationVector));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -199,7 +204,8 @@ public class Product extends javax.swing.JPanel {
             DefaultComboBoxModel paymentMethodModel = new DefaultComboBoxModel(paymentMethodVector);
             jComboBox9.setModel(paymentMethodModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -217,7 +223,8 @@ public class Product extends javax.swing.JPanel {
             DefaultComboBoxModel supplierModel = new DefaultComboBoxModel(supplierVector);
             jComboBox8.setModel(supplierModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -241,7 +248,8 @@ public class Product extends javax.swing.JPanel {
             jComboBox3.setModel(comboBoxModel);
             jComboBox6.setModel(comboBoxModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -268,7 +276,8 @@ public class Product extends javax.swing.JPanel {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -286,7 +295,8 @@ public class Product extends javax.swing.JPanel {
             jComboBox2.setModel(comboBoxModel);
             jComboBox5.setModel(comboBoxModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -3149,7 +3159,8 @@ public class Product extends javax.swing.JPanel {
                 viewIssueJasperReport(last_inserted_id, totalValue);
                 clearnIssuePage();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }//GEN-LAST:event_jButton15ActionPerformed
@@ -3234,7 +3245,8 @@ public class Product extends javax.swing.JPanel {
                 }
                 jTextField25.grabFocus();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
             jTextField18.grabFocus();
         }
@@ -3299,7 +3311,8 @@ public class Product extends javax.swing.JPanel {
 
                         clearGrnPage();
                     } catch (Exception e) {
-                        e.printStackTrace();
+//                        e.printStackTrace();
+                        getLogger.logger().warning(e.toString());
                     }
                 }
             } else {
@@ -3347,7 +3360,8 @@ public class Product extends javax.swing.JPanel {
 
                     clearGrnPage();
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             }
         }
@@ -3386,7 +3400,8 @@ public class Product extends javax.swing.JPanel {
                 System.out.println("No records found in 'CTRL'");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -3418,7 +3433,8 @@ public class Product extends javax.swing.JPanel {
                 System.out.println("No records found in 'CTRL'");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -3479,7 +3495,8 @@ public class Product extends javax.swing.JPanel {
                     jTextField19.setText("0");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
             jTextField18.grabFocus();
         }
@@ -3518,7 +3535,8 @@ public class Product extends javax.swing.JPanel {
         try {
             SQLConnector.iud(query);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
         refreshProductManagePanel();
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -3548,7 +3566,8 @@ public class Product extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Invalid Product ID", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Please enter your product ID", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -3597,6 +3616,7 @@ public class Product extends javax.swing.JPanel {
                 refreshProductRegisterPanel();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Please check the price", "Alert", JOptionPane.INFORMATION_MESSAGE);
+                getLogger.logger().warning(e.toString());
             }
         }
 
@@ -3629,7 +3649,8 @@ public class Product extends javax.swing.JPanel {
                     refreshCategoryPageRegister();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }//GEN-LAST:event_jButton16ActionPerformed
@@ -3662,6 +3683,8 @@ public class Product extends javax.swing.JPanel {
                         jTextField30.grabFocus();
                     }
                 } catch (Exception e) {
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             }
         }
@@ -3703,6 +3726,8 @@ public class Product extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Please select a valid 'Category Type'", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }//GEN-LAST:event_jButton17ActionPerformed
 
@@ -3780,7 +3805,8 @@ public class Product extends javax.swing.JPanel {
                         jTextField34.grabFocus();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a valid location", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -3893,7 +3919,8 @@ public class Product extends javax.swing.JPanel {
                     viewLocationReturnJasperReport(insert_id, totalReturnValue);
                     refreshLocationReturn();
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             }
         }
@@ -3928,7 +3955,8 @@ public class Product extends javax.swing.JPanel {
                 System.out.println("No records found in 'CTRL'");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -3986,7 +4014,8 @@ public class Product extends javax.swing.JPanel {
                         jTextField42.grabFocus();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a valid location", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -4097,7 +4126,8 @@ public class Product extends javax.swing.JPanel {
                 }
                 setDamageToDefault();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }//GEN-LAST:event_jButton35ActionPerformed
@@ -4211,7 +4241,8 @@ public class Product extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Invalid product id", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
