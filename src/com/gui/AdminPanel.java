@@ -4,8 +4,9 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.gui.panel.Dashboard;
 import com.gui.panel.Product;
 import com.gui.panel.Report;
-import com.gui.panel.Supplier;
+//import com.gui.panel.Supplier;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -48,7 +49,8 @@ public class AdminPanel extends javax.swing.JFrame {
                 jLabel7.setText("?");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -451,9 +453,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-
-        addPanelToCenter(jButton9, new Supplier());
-
+//        addPanelToCenter(jButton9, new Supplier());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

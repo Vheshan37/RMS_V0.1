@@ -2,6 +2,7 @@ package com.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.awt.Color;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -50,7 +51,8 @@ public class TableFloorSelection extends javax.swing.JFrame {
                 jPanel.add(jButton);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 

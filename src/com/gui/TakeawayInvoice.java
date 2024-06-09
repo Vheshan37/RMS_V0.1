@@ -5,17 +5,28 @@ import com.gui.panel.InvoiceCategoryGrid;
 import com.gui.panel.InvoicePaymentPanel;
 import com.model.SQLConnector;
 import com.model.TakeawayBillData;
+import com.model.getLogger;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 public class TakeawayInvoice extends javax.swing.JFrame {
 
+    private static Logger log1 = Logger.getLogger("log1");
+
     public TakeawayInvoice() {
         initComponents();
         setDefaultComponent();
+        setTimer();
+        getInvoiceNumber();
     }
 
     public void setDefaultComponent() {
@@ -24,6 +35,33 @@ public class TakeawayInvoice extends javax.swing.JFrame {
         jPanel3.add(new InvoiceCategoryGrid(this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
 
+    }
+
+    public void setTimer() {
+        Timer timer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String formattedDate = (new SimpleDateFormat("yyyy/MM/dd")).format(new Date());
+                jLabel1.setText("Date: " + formattedDate);
+                String formattedTime = (new SimpleDateFormat("HH:mm:ss a")).format(new Date());
+                jLabel2.setText("Time: " + formattedTime);
+            }
+        });
+        timer.start();
+    }
+
+    public void getInvoiceNumber() {
+        String query = "SLECT * FROM `ctrl`";
+        try {
+            ResultSet ctrlData = SQLConnector.search(query);
+            if (ctrlData.next()) {
+                jLabel4.setText("#" + ctrlData.getString("inv_no"));
+            }
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
+        }
     }
 
     public void loadTotalBillValue() {
@@ -802,7 +840,7 @@ public class TakeawayInvoice extends javax.swing.JFrame {
             takeAwayVector.add(takeAwayData);
         }
         jPanel3.removeAll();
-        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Takeaway", "", ""), BorderLayout.CENTER);
+        jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Takeaway", "", "", jLabel4), BorderLayout.CENTER);
         SwingUtilities.updateComponentTreeUI(jPanel3);
     }//GEN-LAST:event_jButton25ActionPerformed
 
@@ -878,6 +916,8 @@ public class TakeawayInvoice extends javax.swing.JFrame {
                     jTextField4.grabFocus();
                 }
             } catch (Exception e) {
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }//GEN-LAST:event_jTextField2KeyReleased

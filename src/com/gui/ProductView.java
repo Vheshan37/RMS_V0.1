@@ -1,11 +1,10 @@
 package com.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.gui.panel.Product;
 import com.model.SQLConnector;
+import com.model.getLogger;
 import java.sql.ResultSet;
 import java.util.Vector;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -203,7 +202,8 @@ public class ProductView extends javax.swing.JFrame {
             }
             jTable1.setModel(productTableModel);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
