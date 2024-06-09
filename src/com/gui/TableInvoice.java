@@ -5,6 +5,7 @@ import com.gui.panel.InvoiceCategoryGrid;
 import com.gui.panel.InvoicePaymentPanel;
 import com.model.SQLConnector;
 import com.model.TakeawayBillData;
+import com.model.getLogger;
 import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -45,8 +46,9 @@ public class TableInvoice extends javax.swing.JFrame {
                 returnValue = 0;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             returnValue = 0;
+            getLogger.logger().warning(e.toString());
         }
 
         return returnValue;
@@ -101,7 +103,8 @@ public class TableInvoice extends javax.swing.JFrame {
                 }
                 loadTotalBillValue();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
         loadTotalBillValue();
@@ -896,7 +899,8 @@ public class TableInvoice extends javax.swing.JFrame {
                 query = "DELETE FROM table_reservation WHERE id='" + reservationID + "'";
                 SQLConnector.iud(query);
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
             clearTableStatus();
             viewTableSelection();
@@ -910,7 +914,8 @@ public class TableInvoice extends javax.swing.JFrame {
             query = "UPDATE `table` SET `table_room_status_id`=(SELECT `id` FROM `table_room_status` WHERE `status`='Available') WHERE id='" + tableMap.get(tableMap.get("tableName")) + "'";
             SQLConnector.iud(query);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            getLogger.logger().warning(e.toString());
         }
     }
 
@@ -938,7 +943,7 @@ public class TableInvoice extends javax.swing.JFrame {
                 takeAwayVector.add(takeAwayData);
             }
             jPanel3.removeAll();
-            jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Table", tableMap.get(tableMap.get("tableName")), String.valueOf(reservationID)), BorderLayout.CENTER);
+            jPanel3.add(new InvoicePaymentPanel(jTextField7.getText(), takeAwayVector, jTable1, this.jPanel3, jTextField2, jTextField3, jTextField5, jTextField4, jTextField7, "Table", tableMap.get(tableMap.get("tableName")), String.valueOf(reservationID), null), BorderLayout.CENTER);
             SwingUtilities.updateComponentTreeUI(jPanel3);
         }
     }//GEN-LAST:event_jButton25ActionPerformed
@@ -963,7 +968,8 @@ public class TableInvoice extends javax.swing.JFrame {
                 try {
                     SQLConnector.iud(query);
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             } else {
 //                Insert to new reservationID
@@ -983,7 +989,8 @@ public class TableInvoice extends javax.swing.JFrame {
                             + "VALUES ('" + jTextField4.getText() + "','" + jTextField2.getText() + "','" + insertID + "',(SELECT `id` FROM `reservation_item_status` WHERE `status`='Pending' LIMIT 1))";
                     SQLConnector.iud(query);
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
             }
 
@@ -1047,6 +1054,8 @@ public class TableInvoice extends javax.swing.JFrame {
                     jTextField4.grabFocus();
                 }
             } catch (Exception e) {
+//                e.printStackTrace();
+                getLogger.logger().warning(e.toString());
             }
         }
     }//GEN-LAST:event_jTextField2KeyReleased
@@ -1061,7 +1070,8 @@ public class TableInvoice extends javax.swing.JFrame {
                 try {
                     SQLConnector.iud(query);
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    getLogger.logger().warning(e.toString());
                 }
 
                 DefaultTableModel billTable = (DefaultTableModel) jTable1.getModel();
