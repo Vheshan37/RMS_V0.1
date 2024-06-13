@@ -12,7 +12,7 @@ public class SQLConnector {
     private static Connection connection;
     private static final String db = "rms_db";
     private static final String username = "root";
-    private static final String password = "Vheshan37@37";
+    private static final String password = "741A852S963d0#1";
     private static final String url = "jdbc:mysql://localhost:3306/" + db + "?autoReconnect=true&useSSL=false";
 
     public static Connection ensureConnection() throws SQLException, ClassNotFoundException {
