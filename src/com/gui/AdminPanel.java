@@ -10,8 +10,8 @@ import com.model.getLogger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JButton;
@@ -29,18 +29,15 @@ public class AdminPanel extends javax.swing.JFrame {
         setTimer();
     }
 
-    public void setTimer() {
-        Timer timer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd   HH:mm:ss a")).format(new Date());
-                jLabel9.setText(formattedDateTime);
-            }
+    public final void setTimer() {
+        Timer timer = new Timer(100, (ActionEvent ae) -> {
+            String formattedDateTime = (new SimpleDateFormat("yyyy/MM/dd   HH:mm:ss a")).format(new Date());
+            jLabel9.setText(formattedDateTime);
         });
         timer.start();
     }
 
-    public void SetDefaultComponents() {
+    public final void SetDefaultComponents() {
         try {
             ResultSet ctrlTable = SQLConnector.search("SELECT * FROM `ctrl`");
             if (ctrlTable.next()) {
@@ -48,7 +45,7 @@ public class AdminPanel extends javax.swing.JFrame {
             } else {
                 jLabel7.setText("?");
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
 //            e.printStackTrace();
             getLogger.logger().warning(e.toString());
         }
